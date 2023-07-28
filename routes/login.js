@@ -27,7 +27,7 @@ router.post('/login', async (req, res) => {
         user
       })
     } else {
-      res.send('Tên đăng nhập hoặc mật khẩu không đúng!');
+      return res.status(401).send('Tên đăng nhập hoặc mật khẩu không đúng!');
     }
   } catch (error) {
     console.error('Đăng nhập thất bại:', error);
