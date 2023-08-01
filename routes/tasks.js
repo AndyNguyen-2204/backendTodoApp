@@ -12,6 +12,26 @@ router.get('/tasks/:userId', async (req, res) => {
     res.status(500).send("Láy danh sách công việc thất bại");
   }
 });
+// API lấy danh sách các công việc
+router.get('/tasks/:userId/newtask', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const tasks = await Task.find({ userId }).sort({ createdAt: -1 }); // Sắp xếp theo trường createdAt giảm dần
+    res.send(tasks);
+  } catch (error) {
+    res.status(500).send("Lấy danh sách công việc thất bại");
+  }
+});
+router.get('/tasks/:userId/completed', async (req, res) => {
+  const userId = req.params.userId;
+  try {
+    const completedTasks = await Task.find({ userId, status: 'Completed' }); // Lọc các task có trạng thái là "Completed"
+    res.send(completedTasks);
+  } catch (error) {
+    res.status(500).send("Lấy danh sách công việc thất bại");
+  }
+});
+
 
 // API tạo công việc mới
 router.post('/tasks/:userId', async (req, res) => {

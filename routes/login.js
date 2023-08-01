@@ -60,5 +60,16 @@ router.post('/register', async (req, res) => {
   }
 });
 
+router.get('/logout', async (req, res) => {
+
+  try {
+    // Kiểm tra xem tên đăng nhập đã tồn tại trong MongoDB chưa
+    res.send('Đăng xuất thành công!');
+
+  } catch (error) {
+    res.status(500).send('Đăng xuất thất bại!');
+  }
+});
+
 
 module.exports = router;
