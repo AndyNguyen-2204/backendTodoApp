@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const path = require('path');
 
 const app = express();
 const port = 8080;
@@ -30,6 +31,7 @@ const userRoutes = require('./routes/login');
 app.use('/api', userRoutes);
 const uploadRoutes = require('./routes/upload');
 app.use('/api', uploadRoutes);
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // Lắng nghe các kết nối
 app.listen(port, () => {

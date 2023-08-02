@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
 });
 //đăng ký 
 router.post('/register', async (req, res) => {
-  const { username, password} = req.body;
+  const { username, password,avatar} = req.body;
 
   try {
     // Kiểm tra xem tên đăng nhập đã tồn tại trong MongoDB chưa
@@ -48,7 +48,8 @@ router.post('/register', async (req, res) => {
     // Tạo người dùng mới và lưu vào MongoDB
     const newUser = new User({
       username,
-      password
+      password,
+      avatar
     });
     await newUser.save();
 
