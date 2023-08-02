@@ -21,12 +21,15 @@ db.once('open', function () {
 // Cấu hình body-parser để phân tích nội dung yêu cầu
 app.use(bodyParser.json());
 app.use(cors());
+app.use(express.urlencoded({ extended: true }));
 
 // Kết nối các routes vào ứng dụng Express
 const taskRoutes = require('./routes/tasks');
 app.use('/api', taskRoutes);
 const userRoutes = require('./routes/login');
 app.use('/api', userRoutes);
+const uploadRoutes = require('./routes/upload');
+app.use('/api', uploadRoutes);
 
 // Lắng nghe các kết nối
 app.listen(port, () => {
