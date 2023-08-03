@@ -8,7 +8,6 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const bcrypt = require('bcrypt');
 
-// API lấy danh sách các công việc
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
@@ -64,11 +63,21 @@ router.post('/register', async (req, res) => {
 router.get('/logout', async (req, res) => {
 
   try {
-    // Kiểm tra xem tên đăng nhập đã tồn tại trong MongoDB chưa
     res.send('Đăng xuất thành công!');
 
   } catch (error) {
     res.status(500).send('Đăng xuất thất bại!');
+  }
+});
+
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userData= await User.findById(userId)
+    res.send(userData);
+
+  } catch (error) {
+    res.status(500).send('Lấy thông tin tài khoản không thành công!');
   }
 });
 

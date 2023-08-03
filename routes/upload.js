@@ -11,7 +11,7 @@ if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
   } catch (err) {
     console.error('Error while creating the upload directory:', err);
-    return res.status(500).send('Error while creating the upload directory.');
+    process.exit(1);
   }
 }
 // Tạo storage engine để chỉ định nơi lưu trữ file
@@ -20,7 +20,7 @@ const storage = multer.diskStorage({
     cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
-    const date = new Date().toString() 
+    const date = Date.now();
     const ext = path.extname(file.originalname)
     let name = path.basename(file.originalname, ext)
     // Xóa các ký tự không hợp lệ khỏi tên tệp
@@ -35,10 +35,27 @@ const upload = multer({ storage: storage });
 // Định nghĩa route cho trang upload
 router.post('/upload', upload.single('image'), async (req, res) => {
   try {
-    // Nếu bạn muốn thực hiện một số xử lý sau khi đã upload thành công, bạn có thể sử dụng req.file
+    if (!req.file) {
+      return res.status(400).send('Không có file được upload');
+    }
     const file = req.file
-    const serverBaseUrl = 'http://localhost:8080'; // Replace with your server's base URL
-    const imageUrl = `${serverBaseUrl}/uploads/avatars/${file.filename}`;
+    const userId = req.body.userId;
+    const serverBaseUrl = 'http://localhost:8080';
+    const user = await User.findById(userId)
+    let imageUrl = null;
+    if (user.avatar) {
+      // Trích xuất tên tệp cũ từ URL ảnh đại diện
+      const oldFileName = user.avatar.split('/').pop();
+      // Xây dựng đường dẫn đầy đủ đến ảnh đại diện cũ
+      const oldFilePath = path.join(uploadDir, oldFileName);
+      // Kiểm tra xem ảnh đại diện cũ tồn tại và xóa nó
+      if (fs.existsSync(oldFilePath)) {
+        fs.unlinkSync(oldFilePath);
+      }
+    }
+    imageUrl = `${serverBaseUrl}/uploads/avatars/${file.filename}`;
+    user.avatar = imageUrl
+    await user.save();
     return res.status(200).send(imageUrl);
   } catch (error) {
     console.error('Error while processing the upload:', error);
