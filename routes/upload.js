@@ -40,7 +40,7 @@ router.post('/upload', upload.single('image'), async (req, res) => {
     }
     const file = req.file
     const userId = req.body.userId;
-    const serverBaseUrl = 'http://localhost:8080';
+    const serverBaseUrl = 'http://localhost:8000';
     const user = await User.findById(userId)
     let imageUrl = null;
     if (user.avatar) {

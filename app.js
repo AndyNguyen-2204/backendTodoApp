@@ -5,7 +5,7 @@ const cors = require('cors');
 const path = require('path');
 
 const app = express();
-const port = 8080;
+const port = 8000;
 
 // Kết nối tới MongoDB
 mongoose.connect('mongodb+srv://nguyenanhtu:anhtu1999@cluster0.mbwchdw.mongodb.net/mydataBase', {
